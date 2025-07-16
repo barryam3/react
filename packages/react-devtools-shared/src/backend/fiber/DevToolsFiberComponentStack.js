@@ -65,9 +65,13 @@ export function describeFiber(
       return describeBuiltInComponentFrame('Activity');
     case FunctionComponent:
     case IndeterminateComponent:
-    case SimpleMemoComponent:
       return describeFunctionComponentFrame(
         workInProgress.type,
+        currentDispatcherRef,
+      );
+    case SimpleMemoComponent:
+      return describeFunctionComponentFrame(
+        workInProgress.type.type,
         currentDispatcherRef,
       );
     case ForwardRef:

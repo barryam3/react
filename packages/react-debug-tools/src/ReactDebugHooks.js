@@ -1334,6 +1334,10 @@ export function inspectHooksOfFiber(
       );
     }
 
+    if (fiber.tag === SimpleMemoComponent) {
+      return inspectHooks(type.type, props, currentDispatcher);
+    }
+
     return inspectHooks(type, props, currentDispatcher);
   } finally {
     currentFiber = null;

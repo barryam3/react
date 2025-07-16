@@ -2855,7 +2855,10 @@ function replayBeginWork(unitOfWork: Fiber): null | Fiber {
       // TODO: Consider moving this switch statement into that module. Also,
       // could maybe use this as an opportunity to say `use` doesn't work with
       // `defaultProps` :)
-      const Component = unitOfWork.type;
+      let Component = unitOfWork.type;
+      if (unitOfWork.tag === SimpleMemoComponent) {
+        Component = Component.type;
+      }
       let context: any;
       if (!disableLegacyContext) {
         const unmaskedContext = getUnmaskedContext(unitOfWork, Component, true);

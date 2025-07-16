@@ -476,25 +476,23 @@ function updateMemoComponent(
   nextProps: any,
   renderLanes: Lanes,
 ): null | Fiber {
+  const type = Component.type;
   if (current === null) {
-    const type = Component.type;
-    if (isSimpleFunctionComponent(type) && Component.compare === null) {
-      let resolvedType = type;
+    if (isSimpleFunctionComponent(type)) {
       if (__DEV__) {
-        resolvedType = resolveFunctionForHotReloading(type);
+        Component.type = resolveFunctionForHotReloading(type);
       }
       // If this is a plain function component without default props,
       // and with only the default shallow comparison, we upgrade it
       // to a SimpleMemoComponent to allow fast path updates.
       workInProgress.tag = SimpleMemoComponent;
-      workInProgress.type = resolvedType;
       if (__DEV__) {
         validateFunctionComponentInDev(workInProgress, type);
       }
       return updateSimpleMemoComponent(
         current,
         workInProgress,
-        resolvedType,
+        Component,
         nextProps,
         renderLanes,
       );
@@ -549,8 +547,9 @@ function updateSimpleMemoComponent(
   // We'll need to figure out if this is fine or can cause issues.
   if (current !== null) {
     const prevProps = current.memoizedProps;
+    const compare = Component.compare ?? shallowEqual;
     if (
-      shallowEqual(prevProps, nextProps) &&
+      compare(prevProps, nextProps) &&
       current.ref === workInProgress.ref &&
       // Prevent bailout if the implementation changed due to hot reload.
       (__DEV__ ? workInProgress.type === current.type : true)
@@ -604,7 +603,7 @@ function updateSimpleMemoComponent(
   return updateFunctionComponent(
     current,
     workInProgress,
-    Component,
+    Component.type,
     nextProps,
     renderLanes,
   );

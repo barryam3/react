@@ -90,10 +90,14 @@ function describeFiberType(fiber: Fiber): null | string {
       return 'Suspense';
     case SuspenseListComponent:
       return 'SuspenseList';
-    case FunctionComponent:
-    case SimpleMemoComponent:
+    case FunctionComponent: {
       const fn = fiber.type;
       return fn.displayName || fn.name || null;
+    }
+    case SimpleMemoComponent: {
+      const fn = fiber.type.type;
+      return fn.displayName || fn.name || null;
+    }
     case ForwardRef:
       const render = fiber.type.render;
       return render.displayName || render.name || null;

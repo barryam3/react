@@ -52,8 +52,9 @@ function describeFiber(fiber: Fiber, childFiber: null | Fiber): string {
     case SuspenseListComponent:
       return describeBuiltInComponentFrame('SuspenseList');
     case FunctionComponent:
-    case SimpleMemoComponent:
       return describeFunctionComponentFrame(fiber.type);
+    case SimpleMemoComponent:
+      return describeFunctionComponentFrame(fiber.type.type);
     case ForwardRef:
       return describeFunctionComponentFrame(fiber.type.render);
     case ClassComponent:
@@ -152,7 +153,6 @@ export function getOwnerStackByFiberInDev(workInProgress: Fiber): string {
         }
       // Fallthrough
       case FunctionComponent:
-      case SimpleMemoComponent:
       case ClassComponent:
         if (!workInProgress._debugOwner && info === '') {
           // Only if we have no other data about the callsite do we add
@@ -162,6 +162,12 @@ export function getOwnerStackByFiberInDev(workInProgress: Fiber): string {
           );
         }
         break;
+      case SimpleMemoComponent:
+        if (!workInProgress._debugOwner && info === '') {
+          info += describeFunctionComponentFrameWithoutLineNumber(
+            workInProgress.type.type,
+          );
+        }
       case ForwardRef:
         if (!workInProgress._debugOwner && info === '') {
           info += describeFunctionComponentFrameWithoutLineNumber(

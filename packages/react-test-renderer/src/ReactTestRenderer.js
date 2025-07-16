@@ -206,10 +206,17 @@ function toTree(node: null | Fiber): $FlowFixMe {
         rendered: childrenToTree(node.child),
       };
     case FunctionComponent:
-    case SimpleMemoComponent:
       return {
         nodeType: 'component',
         type: node.type,
+        props: {...node.memoizedProps},
+        instance: null,
+        rendered: childrenToTree(node.child),
+      };
+    case SimpleMemoComponent:
+      return {
+        nodeType: 'component',
+        type: node.type.type,
         props: {...node.memoizedProps},
         instance: null,
         rendered: childrenToTree(node.child),

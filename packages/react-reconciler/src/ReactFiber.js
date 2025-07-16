@@ -420,8 +420,10 @@ export function createWorkInProgress(current: Fiber, pendingProps: any): Fiber {
     workInProgress._debugNeedsRemount = current._debugNeedsRemount;
     switch (workInProgress.tag) {
       case FunctionComponent:
-      case SimpleMemoComponent:
         workInProgress.type = resolveFunctionForHotReloading(current.type);
+        break;
+      case SimpleMemoComponent:
+        workInProgress.type = resolveFunctionForHotReloading(current.type.type);
         break;
       case ClassComponent:
         workInProgress.type = resolveClassForHotReloading(current.type);

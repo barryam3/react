@@ -266,9 +266,11 @@ function scheduleFibersWithFamiliesRecursively(
     let candidateType = null;
     switch (tag) {
       case FunctionComponent:
-      case SimpleMemoComponent:
       case ClassComponent:
         candidateType = type;
+        break;
+      case SimpleMemoComponent:
+        candidateType = type.type;
         break;
       case ForwardRef:
         candidateType = type.render;
